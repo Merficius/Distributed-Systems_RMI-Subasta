@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,8 @@ import java.util.Enumeration;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 
-import client.SubastaVista;
+import server.InformacionProducto;
+import server.SubastaModelo;
 
 import javax.swing.event.ListSelectionEvent;
 
@@ -55,8 +56,8 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
             it = lista.elements();
             while (it.hasMoreElements()) {
                 info = (InformacionProducto) it.nextElement();
-                listaConPrecios.put(info.producto, String.valueOf(info.precioActual));
-                vista.agregaProducto(info.producto);
+                listaConPrecios.put(info.getNombreProducto(), String.valueOf(info.getPrecioActual()));
+                vista.agregaProducto(info.getNombreProducto());
             }
         } else if (evento.getActionCommand().equals("Ofrecer")) {
             producto = vista.getProductoSeleccionado();

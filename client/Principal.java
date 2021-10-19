@@ -1,6 +1,5 @@
 package client;
 
-import server.SubastaControlador;
 import server.SubastaModelo;
 
 public class Principal {

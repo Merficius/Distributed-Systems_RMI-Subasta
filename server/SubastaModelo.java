@@ -56,12 +56,17 @@ public class SubastaModelo implements Subasta {
         resultado = new Vector(productos.values());
         return resultado;
     }
-    /*
-     * public static void main(String[] args) { try { SubastaModelo obj = new
-     * SubastaModelo();
-     * 
-     * Registry registry = LocateRegistry.getRegistry(); registry.bind("Subasta",
-     * stub); } catch (Exception e) { System.err.println("Error del server: " +
-     * e.toString()); e.printStackTrace(); } }
-     */
+
+    public static void main(String[] args) {
+        try {
+            SubastaModelo obj = new SubastaModelo();
+            Subasta stub = (Subasta) UnicastRemoteObject.exportObject(obj, 0);
+            Registry registry = LocateRegistry.getRegistry();
+            registry.bind("Subasta", stub);
+        } catch (Exception e) {
+            System.err.println("Error del server: " + e.toString());
+            e.printStackTrace();
+        }
+    }
+
 }
