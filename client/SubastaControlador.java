@@ -29,24 +29,24 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
         modelo = m;
     }
 
-    public void obtenerLista(){
+    public void obtenerLista() {
         Vector lista;
-            try {
-                lista = modelo.obtieneCatalogo();
-                Enumeration it;
-                InformacionProducto info;
-                listaConPrecios = new Hashtable();
-                vista.reinicializaListaProductos();
-                it = lista.elements();
-                while (it.hasMoreElements()) {
-                    info = (InformacionProducto) it.nextElement();
-                    listaConPrecios.put(info.producto, String.valueOf(info.precioActual));
-                    vista.agregaProducto(info.getNombreProducto());
-                }
-            } catch (RemoteException e) {
-                System.err.println("Controlador exception: " + e.toString());
-                e.printStackTrace();
+        try {
+            lista = modelo.obtieneCatalogo();
+            Enumeration it;
+            InformacionProducto info;
+            listaConPrecios = new Hashtable();
+            vista.reinicializaListaProductos();
+            it = lista.elements();
+            while (it.hasMoreElements()) {
+                info = (InformacionProducto) it.nextElement();
+                listaConPrecios.put(info.producto, String.valueOf(info.precioActual));
+                vista.agregaProducto(info.getNombreProducto());
             }
+        } catch (RemoteException e) {
+            System.err.println("Controlador exception: " + e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void actionPerformed(ActionEvent evento) {
@@ -75,6 +75,7 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
             System.out.println("Haciendo oferta del producto: " + producto);
             try {
                 modelo.agregaProductoALaVenta(usuario, producto, monto);
+                modelo.callback();
             } catch (RemoteException e) {
                 System.err.println("Controlador exception: " + e.toString());
                 e.printStackTrace();
@@ -82,7 +83,7 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
 
         } else if (evento.getActionCommand().equals("Obtener lista")) {
             obtenerLista();
-            
+
         } else if (evento.getActionCommand().equals("Ofrecer")) {
             producto = vista.getProductoSeleccionado();
             monto = vista.getMontoOfrecido();
