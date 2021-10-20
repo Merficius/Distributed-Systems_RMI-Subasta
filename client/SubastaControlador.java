@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.awt.event.ActionEvent;
 
@@ -16,7 +17,7 @@ import server.Subasta;
 
 import javax.swing.event.ListSelectionEvent;
 
-public class SubastaControlador implements ActionListener, ListSelectionListener {
+public class SubastaControlador implements ActionListener, ListSelectionListener, Serializable {
 
     SubastaVista vista;
     Subasta modelo;
@@ -44,7 +45,7 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
             try {
                 modelo.registraUsuario(usuario);
             } catch (RemoteException e) {
-                System.err.println("Controlador exception: " + e.toString());
+                System.err.println("Controlador exception a: " + e.toString());
                 e.printStackTrace();
             }
         } else if (evento.getActionCommand().equals("Poner a la venta")) {
@@ -69,10 +70,10 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
                 vista.reinicializaListaProductos();
                 it = lista.elements();
                 while (it.hasMoreElements()) {
-                info = (InformacionProducto) it.nextElement();
-                listaConPrecios.put(info.getNombreProducto(), String.valueOf(info.getPrecioActual()));
-                vista.agregaProducto(info.getNombreProducto());
-            }
+                    info = (InformacionProducto) it.nextElement();
+                    listaConPrecios.put(info.producto, String.valueOf(info.precioActual));
+                    vista.agregaProducto(info.getNombreProducto());
+                }
             } catch (RemoteException e) {
                 System.err.println("Controlador exception: " + e.toString());
                 e.printStackTrace();

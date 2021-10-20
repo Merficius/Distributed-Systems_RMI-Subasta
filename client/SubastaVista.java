@@ -15,7 +15,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionListener;
 
-public class SubastaVista {
+public class SubastaVista implements ClientInterface {
 
     JFrame principal;
     JTextField usuario;

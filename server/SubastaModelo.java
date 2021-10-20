@@ -3,8 +3,12 @@ package server;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import client.SubastaVista;
+
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -60,9 +64,12 @@ public class SubastaModelo implements Subasta {
     public static void main(String[] args) {
         try {
             SubastaModelo obj = new SubastaModelo();
-            Subasta stub = (Subasta) UnicastRemoteObject.exportObject(obj, 0);
+            Subasta server_stub = (Subasta) UnicastRemoteObject.exportObject(obj, 0);
+
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Subasta", stub);
+            registry.bind("Subasta", server_stub);
+
+
         } catch (Exception e) {
             System.err.println("Error del server: " + e.toString());
             e.printStackTrace();

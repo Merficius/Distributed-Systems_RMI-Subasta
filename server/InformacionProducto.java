@@ -1,11 +1,13 @@
 package server;
 
-public class InformacionProducto {
+import java.io.Serializable;
+
+public class InformacionProducto implements Serializable {
 
     String vendedor;
-    String producto;
+    public String producto;
     float precioInicial;
-    float precioActual;
+    public float precioActual;
 
     public InformacionProducto(String v, String p, float pi) {
 
