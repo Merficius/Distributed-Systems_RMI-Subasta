@@ -1,8 +1,8 @@
 package server;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
+import client.ClientInterface;
 import client.SubastaVista;
 
 import java.rmi.registry.Registry;
@@ -17,6 +17,8 @@ public class SubastaModelo implements Subasta {
     Hashtable usuarios;
     Hashtable productos;
     Hashtable ofertas;
+    
+    private List<ClientInterface> clients = new LinkedList<>();
 
     public SubastaModelo() {
         usuarios = new Hashtable();
@@ -48,6 +50,7 @@ public class SubastaModelo implements Subasta {
             infoProd = (InformacionProducto) productos.get(producto);
             if (infoProd.actualizaPrecio(monto)) {
                 ofertas.put(producto + comprador, new InformacionOferta(comprador, producto, monto));
+                callback();
                 return true;
             } else
                 return false;
@@ -59,6 +62,28 @@ public class SubastaModelo implements Subasta {
         Vector resultado;
         resultado = new Vector(productos.values());
         return resultado;
+    }
+
+    int index = 0;
+    public void nuevoCliente(ClientInterface client) {
+        try {
+            clients.add(client);
+            index++;
+        } catch(Exception e) {
+            clients.remove(index);
+        }
+    }
+
+    public void callback() {
+        try {
+            for(ClientInterface client_interface : clients) {
+                client_interface.refrescarProductos();
+                client_interface.send("Nuevo precio disponible");
+            }
+        } catch(Exception e) {
+            System.err.println("Error in callback" + e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

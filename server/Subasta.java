@@ -2,6 +2,8 @@ package server;
 
 import java.util.Vector;
 
+import client.ClientInterface;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,4 +15,8 @@ public interface Subasta extends Remote {
     boolean agregaOferta(String comprador, String producto, float monto) throws RemoteException;
 
     Vector obtieneCatalogo() throws RemoteException;
+
+    void callback() throws RemoteException;
+
+    void nuevoCliente(ClientInterface client) throws RemoteException;
 }
