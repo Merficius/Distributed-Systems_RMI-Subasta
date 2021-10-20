@@ -17,7 +17,7 @@ public class SubastaModelo implements Subasta {
     Hashtable usuarios;
     Hashtable productos;
     Hashtable ofertas;
-    
+
     private List<ClientInterface> clients = new LinkedList<>();
 
     public SubastaModelo() {
@@ -26,7 +26,7 @@ public class SubastaModelo implements Subasta {
         ofertas = new Hashtable();
     }
 
-    public boolean registraUsuario(String nombre) {
+    public synchronized boolean registraUsuario(String nombre) {
         if (!usuarios.containsKey(nombre)) {
             System.out.println("Agregando un nuevo usuario: " + nombre);
             usuarios.put(nombre, nombre);
@@ -35,7 +35,7 @@ public class SubastaModelo implements Subasta {
             return false;
     }
 
-    public boolean agregaProductoALaVenta(String vendedor, String producto, float precioInicial) {
+    public synchronized boolean agregaProductoALaVenta(String vendedor, String producto, float precioInicial) {
         if (!productos.containsKey(producto)) {
             System.out.println("Agregando un nuevo producto: " + producto);
             productos.put(producto, new InformacionProducto(vendedor, producto, precioInicial));
@@ -44,7 +44,7 @@ public class SubastaModelo implements Subasta {
             return false;
     }
 
-    public boolean agregaOferta(String comprador, String producto, float monto) {
+    public synchronized boolean agregaOferta(String comprador, String producto, float monto) {
         if (productos.containsKey(producto)) {
             InformacionProducto infoProd;
             infoProd = (InformacionProducto) productos.get(producto);
@@ -58,29 +58,30 @@ public class SubastaModelo implements Subasta {
             return false;
     }
 
-    public Vector obtieneCatalogo() {
+    public synchronized Vector obtieneCatalogo() {
         Vector resultado;
         resultado = new Vector(productos.values());
         return resultado;
     }
 
     int index = 0;
+
     public void nuevoCliente(ClientInterface client) {
         try {
             clients.add(client);
             index++;
-        } catch(Exception e) {
+        } catch (Exception e) {
             clients.remove(index);
         }
     }
 
     public void callback() {
         try {
-            for(ClientInterface client_interface : clients) {
+            for (ClientInterface client_interface : clients) {
                 client_interface.refrescarProductos();
-                client_interface.send("Nuevo precio disponible");
+                // client_interface.send("Nuevo precio disponible");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println("Error in callback" + e.toString());
             e.printStackTrace();
         }
@@ -93,7 +94,6 @@ public class SubastaModelo implements Subasta {
 
             Registry registry = LocateRegistry.getRegistry();
             registry.bind("Subasta", server_stub);
-
 
         } catch (Exception e) {
             System.err.println("Error del server: " + e.toString());

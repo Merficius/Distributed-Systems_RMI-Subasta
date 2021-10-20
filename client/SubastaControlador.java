@@ -32,11 +32,11 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
     public void obtenerLista() {
         Vector lista;
         try {
+            vista.reinicializaListaProductos();
             lista = modelo.obtieneCatalogo();
             Enumeration it;
             InformacionProducto info;
             listaConPrecios = new Hashtable();
-            vista.reinicializaListaProductos();
             it = lista.elements();
             while (it.hasMoreElements()) {
                 info = (InformacionProducto) it.nextElement();
