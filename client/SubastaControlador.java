@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.awt.event.ActionEvent;
 
 import java.util.Hashtable;
@@ -11,17 +12,17 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 
 import server.InformacionProducto;
-import server.SubastaModelo;
+import server.Subasta;
 
 import javax.swing.event.ListSelectionEvent;
 
 public class SubastaControlador implements ActionListener, ListSelectionListener {
 
     SubastaVista vista;
-    SubastaModelo modelo;
+    Subasta modelo;
     Hashtable listaConPrecios;
 
-    public SubastaControlador(SubastaVista v, SubastaModelo m) {
+    public SubastaControlador(SubastaVista v, Subasta m) {
 
         vista = v;
         modelo = m;
@@ -40,30 +41,53 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
         } else if (evento.getActionCommand().equals("Conectar")) {
             usuario = vista.getUsuario();
             System.out.println("Registrarse como usuario: " + usuario);
-            modelo.registraUsuario(usuario);
+            try {
+                modelo.registraUsuario(usuario);
+            } catch (RemoteException e) {
+                System.err.println("Controlador exception: " + e.toString());
+                e.printStackTrace();
+            }
         } else if (evento.getActionCommand().equals("Poner a la venta")) {
             usuario = vista.getUsuario();
             producto = vista.getProducto();
             monto = vista.getPrecioInicial();
             System.out.println("Haciendo oferta del producto: " + producto);
-            modelo.agregaProductoALaVenta(usuario, producto, monto);
+            try {
+                modelo.agregaProductoALaVenta(usuario, producto, monto);
+            } catch (RemoteException e) {
+                System.err.println("Controlador exception: " + e.toString());
+                e.printStackTrace();
+            }
+
         } else if (evento.getActionCommand().equals("Obtener lista")) {
-            Vector lista = modelo.obtieneCatalogo();
-            Enumeration it;
-            InformacionProducto info;
-            listaConPrecios = new Hashtable();
-            vista.reinicializaListaProductos();
-            it = lista.elements();
-            while (it.hasMoreElements()) {
+            Vector lista;
+            try {
+                lista = modelo.obtieneCatalogo();
+                Enumeration it;
+                InformacionProducto info;
+                listaConPrecios = new Hashtable();
+                vista.reinicializaListaProductos();
+                it = lista.elements();
+                while (it.hasMoreElements()) {
                 info = (InformacionProducto) it.nextElement();
                 listaConPrecios.put(info.getNombreProducto(), String.valueOf(info.getPrecioActual()));
                 vista.agregaProducto(info.getNombreProducto());
             }
+            } catch (RemoteException e) {
+                System.err.println("Controlador exception: " + e.toString());
+                e.printStackTrace();
+            }
+            
         } else if (evento.getActionCommand().equals("Ofrecer")) {
             producto = vista.getProductoSeleccionado();
             monto = vista.getMontoOfrecido();
             usuario = vista.getUsuario();
-            modelo.agregaOferta(usuario, producto, monto);
+            try {
+                modelo.agregaOferta(usuario, producto, monto);
+            } catch (RemoteException e) {
+                System.err.println("Controlador exception: " + e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
