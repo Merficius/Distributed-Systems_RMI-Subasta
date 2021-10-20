@@ -34,6 +34,12 @@ public class SubastaModelo implements Subasta {
         } else
             return false;
     }
+    public synchronized void eliminarUsuario(String nombre) {
+        if (usuarios.containsKey(nombre)) {
+            System.out.println("Eliminando al usuario: " + nombre);
+            usuarios.remove(nombre);
+        }
+    }
 
     public synchronized boolean agregaProductoALaVenta(String vendedor, String producto, float precioInicial) {
         if (!productos.containsKey(producto)) {

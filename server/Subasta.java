@@ -2,6 +2,8 @@ package server;
 
 import java.util.Vector;
 
+import javax.print.DocFlavor.STRING;
+
 import client.ClientInterface;
 
 import java.rmi.Remote;
@@ -17,6 +19,8 @@ public interface Subasta extends Remote {
     Vector obtieneCatalogo() throws RemoteException;
 
     void callback() throws RemoteException;
+
+    void eliminarUsuario(String nombre) throws RemoteException;
 
     void nuevoCliente(ClientInterface client) throws RemoteException;
 }

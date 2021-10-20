@@ -58,6 +58,13 @@ public class SubastaControlador implements ActionListener, ListSelectionListener
         System.out.println("<<" + evento.getActionCommand() + ">>");
 
         if (evento.getActionCommand().equals("Salir")) {
+            usuario = vista.getUsuario();
+            try {
+                modelo.eliminarUsuario(usuario);
+            } catch (RemoteException e) {
+                System.err.println("Controlador exception a: " + e.toString());
+                e.printStackTrace();
+            }
             System.exit(1);
         } else if (evento.getActionCommand().equals("Conectar")) {
             usuario = vista.getUsuario();
